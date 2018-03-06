@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Rapezero APP v1.0</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="police">Police</string>
+    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="history">History</string>
+    <string name="exit">Exit</string>
+    <string name="help">To get started, simply click on one of the buttons above and you will be directed to where you can add a full details about your emmergency contacts! Please note that without those contacts the application will not be able to contact anybody incase of emergency, and therefore we recomend you to take that as your first steps and you will really appreciate our services. WE ARE HERE TO HELP YOU. thanks</string>
+    <string name="full_name">Full Names</string>
+    <string name="hint_contact">+2567XXXXXXXX6</string>
+    <string name="personel_details">Personel Details</string>
+    <string name="police_details">Police Details</string>
+    <string name="friend_details">Friend Details</string>
+    <string name="lc_details">LCs Details</string>
+    <string name="other_details">Other Details</string>
+    <string name="district">District</string>
+    <string name="lc">Lc</string>
+    <string name="friend">Friends</string>
+    <string name="others">Others</string>
+    <string name="district_name">District Name</string>
+    <string name="district_details">District Details</string>
+    <string name="dialog">Alart Dialog</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Send</string>
+    <string name="concents">Do you Consent?</string>
+    <string name="msg">Emmergency Details wil be sent as soon as the time reaches 0s!</string>
+    <string name="action_test">Test</string>
+    <string name="inavid_number">Invalid phone Number!</string>
+    <string name="enter_valid_name">Invalid Entry!</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="signin">Sign in</string>
+    <string name="no_account">Create an Account!</string>
+    <string name="login_">Please provide your username and Password inorder to have full access to RapeZero App!</string>
+    <string name="already_account">Already has an Account!</string>
+    <string name="none_paired">None Paired.!</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="stay_safe">STAY SAFE!.....  USE RAPEZERO APP!</string>
+    <string name="atleast_6character">Enter atleast 6char</string>
+    <string name="edit_your_profile">Edit your Profile</string>
+    <string name="profile">Profile</string>
+    <string name="edit_police">Edit Police</string>
+    <string name="edit_friend">Edit Friend</string>
+    <string name="edit_emmergency">Edit Emmergency</string>
+    <string name="edit_lc">Edit LC</string>
+    <string name="edit_district">Edit District</string>
+    <string name="help_message">I need help, come and rescue me...!</string>
+</resources>
