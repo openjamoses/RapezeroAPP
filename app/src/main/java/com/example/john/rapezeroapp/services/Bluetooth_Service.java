@@ -179,7 +179,7 @@ public class Bluetooth_Service extends Service{
 
                 Log.e("Bluetooth", "Time: "+time+"\t"+time2);
                 Log.e("Bluetooth", "Time_Diff: "+dif);
-                if (dif >= 1){
+                if (dif != 0){
                     Intent dialogIntent = new Intent(this, ConcentActivity.class);
                     dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(dialogIntent);

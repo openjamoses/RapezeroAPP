@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "278981548777",
+    "firebase_url": "https://city-checkerapp.firebaseio.com",
+    "project_id": "city-checkerapp",
+    "storage_bucket": "city-checkerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278981548777:android:4fa7d53bcdcea03e",
+        "android_client_info": {
+          "package_name": "com.example.john.rapezeroapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278981548777-aktb0p9g55sk99v1fd7223ueejatf7d0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx6Pg5C4PmwqXeKaIplR75aMYmPSYho8Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

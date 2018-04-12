@@ -90,7 +90,7 @@ public class Friend {
             String query = "SELECT *  FROM" +
                     " "+ Constants.config.TABLE_FRIEND+" p, "+Constants.config.TABLE_DISTRICT+" d" +
                     " WHERE d."+Constants.config.DISTRICT_ID+" = p."+Constants.config.DISTRICT_ID+"" +
-                    " ORDER BY "+Constants.config.FRIEND_NAME+" ASC ";
+                    " ORDER BY "+Constants.config.FRIEND_NAME+" DESC LIMIT 6 ";
             cursor = db.rawQuery(query,null);
             db.setTransactionSuccessful();
         }catch (Exception e){

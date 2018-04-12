@@ -81,7 +81,7 @@ public class Edit_Friends extends AppCompatActivity {
             public void onClick(View view) {
                 int district_id = 0;
                 String fname = input_fname.getText().toString().trim();
-                String descriptions = input_description.getText().toString().trim();
+                String descriptions = "";
                 String contact = input_contact.getText().toString().trim();
                 String district = input_district.getSelectedItem().toString().trim();
 

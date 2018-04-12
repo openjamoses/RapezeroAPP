@@ -90,7 +90,7 @@ public class Emmergency {
             String query = "SELECT *  FROM" +
                     " "+ Constants.config.TABLE_EMERGENCY+" p, "+Constants.config.TABLE_DISTRICT+" d" +
                     " WHERE d."+Constants.config.DISTRICT_ID+" = p."+Constants.config.DISTRICT_ID+"" +
-                    " ORDER BY "+Constants.config.EMERGENCY_NAME+" ASC ";
+                    " ORDER BY "+Constants.config.EMERGENCY_NAME+" DESC LIMIT 2 ";
             cursor = db.rawQuery(query,null);
             db.setTransactionSuccessful();
         }catch (Exception e){

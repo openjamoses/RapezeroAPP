@@ -10,22 +10,15 @@ public class Constants {
         public static final String DB_NAME = "rapezero_app";
         public static final int DB_VERSION = 1;
         /****** URL DECLARATION ******************************/
+        public static final String URL_MODEM = "http://10.127.146.235/";
         public static final String URL_PHONE = "http://192.168.43.18/";
         public static final String URL_CAMTECH = "http://137.63.161.41/";
         public static final String URL_SERVER = "http://173.255.219.164/";
-        public static final String HOST_URL = URL_SERVER+"rapezero_server/pages/mobile_connections/";
-
-
+        public static final String HOST_URL = URL_MODEM+"Rapezero/mobile_connections/";
 
         public static final String IMEI = "IMEI";
         public static final String INSTALL_DATE = "install_date";
         public static final String APP_VERSION = "app_version";
-
-
-
-
-        ///DB CONNECTIONS
-
         //// TODO: 10/12/17   ACTIVATIONS
         public static final String POLICE_ID = "police_id";
         public static final String TABLE_POLICE = "police";
@@ -35,6 +28,7 @@ public class Constants {
         public static final String DISTRICT_ID = "district";
         public static final String TABLE_DISTRICT = "district";
         public static final String DISTRICT_NAME = "district_name";
+        public static final String KEY_TOKEN = "regId";
 
         public static final String LC_ID = "lc_id";
         public static final String TABLE_LC = "lc";
@@ -64,8 +58,12 @@ public class Constants {
 
         public static final String USERNAME = "username";
         public static final String PHONE_CONTACT = "phone_contact";
+        public static final String FILE_UPLOAD_URL = "sync_data/fileUploads.php";
 
-
+        public static final String FIREBASE_URL = "https://foodscanner-466e0.firebaseio.com/";
+        public static final String FIREBASE_UPLOADS = "uploads/";
+        public static final String STORAGE_REFERENCE = "gs://foodscanner-466e0.appspot.com/";
+        //public static final String APP_FOLDER = "RapeZero_APP";
 
 
         public static final String APP_FOLDER = "RapeZero_APP";

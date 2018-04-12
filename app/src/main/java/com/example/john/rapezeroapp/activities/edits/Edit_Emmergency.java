@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 public class Edit_Emmergency extends AppCompatActivity {
-    private EditText input_fname,input_description,input_contact;
+    private EditText input_fname,input_contact;
     private Spinner input_district;
     private Button submit_btn;
     private AwesomeValidation awesomeValidation;
@@ -47,7 +47,7 @@ public class Edit_Emmergency extends AppCompatActivity {
         setContentView(R.layout.content_edit_emmergency);
 
         input_fname = (EditText) findViewById(R.id.input_fname);
-        input_description = (EditText) findViewById(R.id.input_description);
+        //input_description = (EditText) findViewById(R.id.input_description);
         input_contact = (EditText) findViewById(R.id.input_contact);
         input_district = (Spinner) findViewById(R.id.input_district);
         submit_btn = (Button) findViewById(R.id.submit_btn);
@@ -81,7 +81,7 @@ public class Edit_Emmergency extends AppCompatActivity {
             public void onClick(View view) {
                 int district_id = 0;
                 String fname = input_fname.getText().toString().trim();
-                String descriptions = input_description.getText().toString().trim();
+                String descriptions = "";
                 String contact = input_contact.getText().toString().trim();
                 String district = input_district.getSelectedItem().toString().trim();
 
@@ -109,7 +109,7 @@ public class Edit_Emmergency extends AppCompatActivity {
             if (cursor.moveToFirst()) {
                 do {
                     input_fname.setText(cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_NAME)));
-                    input_description.setText(cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_TYPE)));
+                    //input_description.setText(cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_TYPE)));
                     input_contact.setText(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
                     lists.add(cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME)));
                     lists_id.add(cursor.getInt(cursor.getColumnIndex(Constants.config.DISTRICT_ID)));

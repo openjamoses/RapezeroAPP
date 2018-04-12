@@ -2,12 +2,10 @@ package com.example.john.rapezeroapp.activities;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -40,6 +38,7 @@ import com.example.john.rapezeroapp.adapters.Concent_Adapter;
 import com.example.john.rapezeroapp.core.SharedPreference;
 import com.example.john.rapezeroapp.db_operations.Emmergency;
 import com.example.john.rapezeroapp.db_operations.Friend;
+import com.example.john.rapezeroapp.db_operations.Uploads;
 import com.example.john.rapezeroapp.db_operations.Lcs;
 import com.example.john.rapezeroapp.db_operations.Personel;
 import com.example.john.rapezeroapp.db_operations.Police;
@@ -49,6 +48,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -96,9 +101,12 @@ public class ConcentActivity extends AppCompatActivity  implements
     private static final String TAG = "Googleplay Map";
     private SharedPreference sharedPreferenceObj; // Declare Global
 
+    FirebaseAuth mAuth;
+
     //TODO :::: Audio player...!!!
     private MediaRecorder mediaRecorder;
     String voiceStoragePath;
+    Uri vPath;
     int count  = 0;
     static final String AB = "abcdefghijklmnopqrstuvwxyz";
     static Random rnd = new Random();
@@ -137,6 +145,26 @@ public class ConcentActivity extends AppCompatActivity  implements
             e.printStackTrace();
         }
 
+        try{
+            FirebaseApp.initializeApp(context);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
+            mAuth = FirebaseAuth.getInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                // do your stuff
+            } else {
+                signInAnonymously();
+            }
+            }catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -223,9 +251,7 @@ public class ConcentActivity extends AppCompatActivity  implements
                                                 }
                                             }
                                         }
-
         );
-
     }
     public void startTimer(long total_time ){
 
@@ -246,8 +272,10 @@ public class ConcentActivity extends AppCompatActivity  implements
             public  void onFinish(){
                 count_text.setText("FINISH!!");
                 dialog.dismiss();
+                if (count_ == true){
+                    sendSMS();
+                }
 
-               //sendSMS();
             }
 
         };
@@ -263,16 +291,69 @@ public class ConcentActivity extends AppCompatActivity  implements
         final String phone = "+256750507955";
         try {
             SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage("+256750507955", null,message , null, null);
-            Log.e("MESSAGES", "SMS SENT SUCCESS!");
-            Toast.makeText(context,"SMS SENT SUCCESS!",Toast.LENGTH_SHORT).show();
+            final List<String> list = new ArrayList<>();
+            try{
+                Cursor cursor = new Police(context).selectAll();
+                if (cursor.moveToFirst()){
+                    do {
+                        list.add(cursor.getString(cursor.getColumnIndex(Constants.config.POLICE_TYPE)));
+                    }while (cursor.moveToNext());
+                }
+                cursor = new Friend(context).selectAll();
+                if (cursor.moveToFirst()){
+                    do {
+                        list.add(cursor.getString(cursor.getColumnIndex(Constants.config.FRIEND_TYPE)));
+                    }while (cursor.moveToNext());
+                }
+                cursor = new Emmergency(context).selectAll();
+                if (cursor.moveToFirst()){
+                    do {
+                        list.add(cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_TYPE)));
+                    }while (cursor.moveToNext());
+                }
+                cursor = new Lcs(context).selectAll();
+                if (cursor.moveToFirst()){
+                    do {
+                        list.add(cursor.getString(cursor.getColumnIndex(Constants.config.LC_TYPE)));
+                    }while (cursor.moveToNext());
+                }
+
+
+                for (int i=0; i<list.size(); i++){
+                    sms.sendTextMessage(list.get(i), null,message , null, null);
+                    Log.e("MESSAGES", "SMS SENT SUCCESS! TO: "+list.get(i));
+
+                    if (i == list.size()-1){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (contact_list.size() > 0){
+                                    callPhone(phone);
+                                    ///Log.e("Phone:::", list+"\t"+contact_list);
+                                }
+
+                            }},10000);
+                    }
+                }
+
+                Toast.makeText(context,"SMS SENT SUCCESS TO: "+list.size(),Toast.LENGTH_SHORT).show();
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
 
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(mediaRecorder == null){
-                        initializeMediaRecord();
+                    try {
+                        if (mediaRecorder == null) {
+                            initializeMediaRecord();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
 
                     try{
@@ -282,11 +363,7 @@ public class ConcentActivity extends AppCompatActivity  implements
                     }
                 }},500);
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    callPhone(phone);
-                }},20000);
+
 
 
         }catch (Exception e){
@@ -320,8 +397,8 @@ public class ConcentActivity extends AppCompatActivity  implements
             if (cursor.moveToFirst()){
                 do {
                     name_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.POLICE_NAME)));
-                    title_list.add("Police "+cursor.getString(cursor.getColumnIndex(Constants.config.POLICE_TYPE)));
-                    contact_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
+                    contact_list.add("Police "+cursor.getString(cursor.getColumnIndex(Constants.config.POLICE_TYPE)));
+                    title_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
                     district_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME)));
                 }while (cursor.moveToNext());
             }
@@ -329,8 +406,8 @@ public class ConcentActivity extends AppCompatActivity  implements
             if (cursor.moveToFirst()){
                 do {
                     name_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.LC_NAME)));
-                    title_list.add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.LC_TYPE)));
-                    contact_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
+                    contact_list .add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.LC_TYPE)));
+                    title_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
                     district_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME)));
                 }while (cursor.moveToNext());
             }
@@ -338,8 +415,8 @@ public class ConcentActivity extends AppCompatActivity  implements
             if (cursor.moveToFirst()){
                 do {
                     name_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_NAME)));
-                    title_list.add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_TYPE)));
-                    contact_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
+                    contact_list.add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.EMERGENCY_TYPE)));
+                    title_list .add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
                     district_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME)));
                 }while (cursor.moveToNext());
             }
@@ -347,8 +424,8 @@ public class ConcentActivity extends AppCompatActivity  implements
             if (cursor.moveToFirst()){
                 do {
                     name_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.FRIEND_NAME)));
-                    title_list.add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.FRIEND_TYPE)));
-                    contact_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
+                    contact_list.add("LC "+cursor.getString(cursor.getColumnIndex(Constants.config.FRIEND_TYPE)));
+                    title_list .add(cursor.getString(cursor.getColumnIndex(Constants.config.PHONE_CONTACT)));
                     district_list.add(cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME)));
                 }while (cursor.moveToNext());
             }
@@ -357,6 +434,7 @@ public class ConcentActivity extends AppCompatActivity  implements
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -459,6 +537,7 @@ public class ConcentActivity extends AppCompatActivity  implements
         }
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -538,21 +617,58 @@ public class ConcentActivity extends AppCompatActivity  implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mediaPlayer = new MediaPlayer();
-                try {
-                    mediaPlayer.setDataSource(voiceStoragePath);
+                if (voiceStoragePath != null ) {
+                    mediaPlayer = new MediaPlayer();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                    try {
+                        mediaPlayer.setDataSource(voiceStoragePath);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mediaPlayer.start();
                 }
-                try {
-                    mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                mediaPlayer.start();
+
+
+
             }
         });
+
+        select(voiceStoragePath);
+    }
+
+    private void select(String voiceStoragePath){
+        String name = "";
+        String contact = "";
+        String desc = "";
+        String location = "";
+        String district = "";
+        String username = "";
+        try{
+            Cursor cursor = new Personel(context).selectAll();
+            if (cursor.moveToFirst()){
+                do {
+                    name = cursor.getString(cursor.getColumnIndex(Constants.config.PERSONEL_NAME));
+                    desc  = cursor.getString(cursor.getColumnIndex(Constants.config.PERSONEL_DESCRIPTION));
+                    contact = cursor.getString(cursor.getColumnIndex(Constants.config.PERSONEL_CONTACT));
+                    location = cursor.getString(cursor.getColumnIndex(Constants.config.CURRENT_LOCATION));
+                    district = cursor.getString(cursor.getColumnIndex(Constants.config.DISTRICT_NAME));
+                    username =  cursor.getString(cursor.getColumnIndex(Constants.config.USERNAME));
+
+                }while (cursor.moveToNext());
+            }
+
+            new Uploads(context).uploads(voiceStoragePath,name,contact,desc,location,district,username);
+            //new UploadFile(context).create(name,contact,desc,location,district,username,voiceStoragePath);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     private void stopAudioPlay(){
         runOnUiThread(new Runnable() {
@@ -590,12 +706,40 @@ public class ConcentActivity extends AppCompatActivity  implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mediaRecorder = new MediaRecorder();
-                mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-                mediaRecorder.setOutputFile(voiceStoragePath);
+                try{
+                    mediaRecorder = new MediaRecorder();
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+                    mediaRecorder.setOutputFile(voiceStoragePath);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         });
     }
+
+
+
+    private void signInAnonymously() {
+        try {
+            mAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    // do your stuff
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.e("TAG", "signInAnonymously:FAILURE", exception);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

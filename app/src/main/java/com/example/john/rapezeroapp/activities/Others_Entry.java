@@ -30,7 +30,7 @@ import java.util.List;
  */
 
 public class Others_Entry extends AppCompatActivity {
-    private EditText input_fname,input_description,input_contact;
+    private EditText input_fname,input_contact;
     private Spinner input_district;
     private Button submit_btn;
     private AwesomeValidation awesomeValidation;
@@ -44,7 +44,7 @@ public class Others_Entry extends AppCompatActivity {
         setContentView(R.layout.content_other_entry);
 
         input_fname = (EditText) findViewById(R.id.input_fname);
-        input_description = (EditText) findViewById(R.id.input_description);
+        //input_description = (EditText) findViewById(R.id.input_description);
         input_contact = (EditText) findViewById(R.id.input_contact);
         input_district = (Spinner) findViewById(R.id.input_district);
         submit_btn = (Button) findViewById(R.id.submit_btn);
@@ -54,7 +54,7 @@ public class Others_Entry extends AppCompatActivity {
 
         final String pattern = "\\d{10}|(?:\\d{3})";
         ///Todo ......!!! String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        awesomeValidation.addValidation(this, R.id.input_description, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.enter_valid_name);
+        //awesomeValidation.addValidation(this, R.id.input_description, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.enter_valid_name);
         awesomeValidation.addValidation(this, R.id.input_contact, pattern, R.string.inavid_number);
         awesomeValidation.addValidation(this, R.id.input_fname, "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", R.string.enter_valid_name);
 
@@ -70,7 +70,7 @@ public class Others_Entry extends AppCompatActivity {
             public void onClick(View view) {
                 int district_id = 0;
                 String fname = input_fname.getText().toString().trim();
-                String descriptions = input_description.getText().toString().trim();
+                String descriptions = "";
                 String contact = input_contact.getText().toString().trim();
                 String district = input_district.getSelectedItem().toString().trim();
 
